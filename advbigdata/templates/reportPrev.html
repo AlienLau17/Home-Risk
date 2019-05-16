@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <title>report</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static "css/report.css" %}" rel="stylesheet">
+    <script src="{% static "echarts.min.js" %}"></script>
+</head>
+
+
+<body>
+
+
+{#<script>#}
+{#    var id = sessionStorage.getItem('id');#}
+{#    document.getElementById('showId').innerText = id;#}
+{#</script>#}
+
+
+<span id="showId"></span>
+
+
+
+<div class="header">
+    <h1>Customer Basic Information and Default Prediction</h1>
+</div>
+
+
+<div class="row">
+    <div class="side">
+        <h2>Prediction Score</h2>
+        <div class="score" style="height:80px;">
+            <h1> id = {{ SK_ID_CURR }} </h1>
+            <h1> sex = {{ CODE_GENDER }} </h1>
+        </div>
+
+        <h2>Personal Information</h2>
+        <p>Bureau info = {{SK_ID_PREV_CREDIT}}</p>
+        <div class="fakeimg" style="height:60px;">Image</div><br>
+        <div class="fakeimg" style="height:60px;">Image</div><br>
+        <div class="fakeimg" style="height:60px;">Image</div>
+    </div>
+
+    <div class="main">
+        <h2>Credit Card Balance Plot</h2>
+        <h5>Title description, Dec 7, 2017</h5>
+        <div id = 'barchart' style="height:400px; width: 800px"></div>
+        <script type ="text/javascript">
+            var myChart = echarts.init(document.getElementById('barchart'));
+            {#var bureau = {{ bureau|safe }};#}
+            {#var event_id =#}
+        // 指定图表的配置项和数据
+            option = {
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data:['DAYS_CREDIT_ENDDATE', 'DAYS_CREDIT', 'AMT_CREDIT_SUM','AMT_CREDIT_SUM_DEBT']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                yAxis : [
+                    {
+                        name:'Days',
+                        type : 'value',
+                        axisTick : {show: false},
+                        splitLine: { show: false }
+                    },
+                    {
+                        name:'Amounts',
+                        type : 'value',
+                        axisTick : {show: false},
+                        splitLine: { show: false }
+                    }
+                ],
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : {{ SK_ID_BUREAU|safe }}
+                    }
+                ],
+                series : [
+                    {
+                        name:'DAYS_CREDIT_ENDDATE',
+                        type:'bar',
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'inside'
+                            }
+                        },
+                        yAxisIndex: 0,
+                        data:{{ DAYS_CREDIT_ENDDATE|safe }}
+                    },
+                    {
+                        name:'DAYS_CREDIT',
+                        type:'bar',
+                        label: {
+                            normal: {
+                                show: false
+                            },
+
+                        },
+                        yAxisIndex: 0,
+                        data:{{ DAYS_CREDIT|safe }}
+                    },
+                    {
+                        name:'AMT_CREDIT_SUM_DEBT',
+                        type:'bar',
+                        label: {
+                            normal: {
+                                show: false
+                            },
+
+                        },
+                        yAxisIndex: 1,
+                        data:{{ AMT_CREDIT_SUM_DEBT|safe }}
+                    },
+                    {
+                        name:'AMT_CREDIT_SUM',
+                        type:'bar',
+                        label: {
+                            normal: {
+                                show: false
+                            },
+
+                        },
+                        yAxisIndex: 1,
+                        data:{{ AMT_CREDIT_SUM|safe }}
+                    },
+                    {#{#}
+                    {#    name:'支出',#}
+                    {#    type:'bar',#}
+                    {#    stack: '总量',#}
+                    {#    label: {#}
+                    {#        normal: {#}
+                    {#            show: true,#}
+                    {#            position: 'left'#}
+                    {#        }#}
+                    {#    },#}
+                    {#    data:{{ AMT_CREDIT_SUM|safe }}#}
+                    {#}#}
+                ]
+            };
+            myChart.setOption(option);
+        </script>
+
+        <p>Some text..</p>
+        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+        <br>
+        <h2>TITLE HEADING</h2>
+        <h5>Title description, Sep 2, 2017</h5>
+        <div id = 'linechart' style="height:400px; width: 800px"></div>
+
+        <script type ="text/javascript">
+            var myChart2 = echarts.init(document.getElementById('linechart'));
+            option = {
+                title: {
+                    text: 'Credit'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    data:{{ MONTHS_BALANCE|safe }}
+                },
+                yAxis: {
+                    name:'Amounts',
+                    type : 'value',
+                    splitLine: { show: false }
+                },
+                toolbox: {
+                    left: 'center',
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                dataZoom: [{
+                    start: 0,
+                    end:20
+                }, {
+                    type: 'inside'
+                }],
+                visualMap: {
+                    top: 10,
+                    right: 10,
+                    pieces: [{
+                        gt: 0,
+                        lte: 10000,
+                        color: '#00aa66'
+                    }, {
+                        gt: 10000,
+                        lte: 50000,
+                        color: '#0055aa'
+                    }, {
+                        gt: 50000,
+                        lte: 100000,
+                        color: '#ffde33'
+                    }, {
+                        gt: 100000,
+                        lte: 500000,
+                        color: '#cc0033'
+                    }],
+                    outOfRange: {
+                        color: '#000000'
+                    }
+                },
+                series: {
+                    name: 'MONTH_BALANCE',
+                    type: 'line',
+                    data: {{ AMT_BALANCE|safe }},
+                    markLine: {
+                        silent: true,
+                        data: [{
+                            yAxis: 10000
+                        }, {
+                            yAxis: 50000
+                        }, {
+                            yAxis: 100000
+                        }]
+                    }
+                }
+            };
+            myChart2.setOption(option);
+
+        </script>
+
+        <p>Some text..</p>
+        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+    </div>
+</div>
+
+<div class="footer">
+    <h2>Footer</h2>
+</div>
+
+</body>
+
+
+
+{##}
+{#option = {#}
+{#    xAxis: {#}
+{#        type: 'category',#}
+{#        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']#}
+{#    },#}
+{#    yAxis: {#}
+{#        type: 'log',#}
+{#        min:1,#}
+{#        logBase:3#}
+{#    },#}
+{#    series: [{#}
+{#        data: [2, 32, 91, 1134, 1290, 1330, 320],#}
+{#        type: 'line'#}
+{#    }]#}
+{#};#}

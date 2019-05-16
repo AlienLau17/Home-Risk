@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <title>Homepage</title>
+    <link href="{% static "css/homepage.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+<header>
+    <nav>
+        <ul id="nav_bar">
+            <li id="sign_in"><a href="#" onclick="openstat()">Statistics</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- GOOGLE IMG -->
+<div class="google">
+    <a href="#" id="google_logo"><img src="{% static "image/title.png" %}" alt="home_credit.png"/></a>
+</div>
+
+<!-- FORM SEARCH -->
+
+<div class="form">
+    <form action= "{% url 'report' %}" method="POST">
+        <label for="form-search"></label>
+        <input name = "user_id" type="text" id="form-search" placeholder="Please enter customer ID">
+{#        <input name = "user_id" type="text" placeholder="Please enter customer ID">#}
+        <button type="submit" style = '...'>Search</button>
+{#        <button onclick="search()" style="height: 32px;">Q</button>#}
+    </form>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <ul class="footer-left">
+        <li><a href="#">Rui Liu & Juncai Liu</a></li>
+    </ul>
+    <ul class="footer-right">
+        <li><a href="#"> Privacy </a></li>
+
+    </ul>
+</footer>
+
+{#<script>#}
+{#    function search(e){#}
+{#        let value = document.getElementById('form-search').value;#}
+{#        sessionStorage.setItem('id',value);#}
+{#        window.open("./report.html","_blank");#}
+{#    }#}
+{#</script>#}
+
+
+</body>
